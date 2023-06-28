@@ -1,32 +1,37 @@
-
-const { validateNickName, validateEmail, validatePassword, validateNumber } = require("../microservices/validationsService");
+const {
+  validateNickName,
+  validateEmail,
+  validatePassword,
+  validateNumber,
+} = require("../microservices/validationsService");
 const { insertUser, getUser } = require("../microservices/userService");
 
-const registerUser = async (data) =>{
-    const  {nickName, correo, clave, nivel } = data;
+const registerUser = async (data) => {
+  try {
+    const { NickName, Correo, Clave, Nivel } = data;
 
     //Validar si el nickName cumple con las reglas
-    const nickVal = validateNickName(nickName);
-    if ( nickVal != true){
-        return nickVal;
+    const nickVal = validateNickName(NickName);
+    if (nickVal != true) {
+      return nickVal;
     }
 
     //Validar si el correo cumple con las reglas
-    const correoVal = validateEmail(correo);
-    if ( correoVal != true){
-        return correoVal;
+    const correoVal = validateEmail(Correo);
+    if (correoVal != true) {
+      return correoVal;
     }
 
     //Validar si el clave cumple con las reglas
-    const claveVal = validatePassword(clave);
-    if ( claveVal != true){
-        return claveVal;
+    const claveVal = validatePassword(Clave);
+    if (claveVal != true) {
+      return claveVal;
     }
 
     //Validar si el clave cumple con las reglas
-    const nivelVal = validateNumber(nivel);
-    if ( nivelVal != true){
-        return nivelVal;
+    const nivelVal = validateNumber(Nivel);
+    if (nivelVal != true) {
+      return nivelVal;
     }
 
     //Los datos del usuario cumplen con todas las reglas
@@ -34,34 +39,32 @@ const registerUser = async (data) =>{
     //Registrar el usuario
     const res = await insertUser(data);
 
-    if(!res){
-        return false;
-    }else{
-        return res;
-    }
-}
+    return res;
+  } catch (error) {
+    return { error: "Error al registrar usuario.", response: error };
+  }
+};
 
-const login = async (data) =>{
-
+const login = async (data) => {
+  try {
     //Validar si el correo cumple con las reglas
     const correoVal = validateEmail(data.correo);
-    if ( correoVal != true){
-        return correoVal;
+    if (correoVal != true) {
+      return correoVal;
     }
 
     //Validar si el clave cumple con las reglas
     const claveVal = validatePassword(data.clave);
-    if ( claveVal != true){
-        return claveVal;
+    if (claveVal != true) {
+      return claveVal;
     }
 
     const res = await getUser(data);
 
-    if(!res){
-        return false;
-    }else{
-        return res;
-    }
-}
+    return res;
+  } catch (error) {
+    return { error: "Error al loguear usuario.", response: error };
+  }
+};
 
 module.exports = { registerUser, login };

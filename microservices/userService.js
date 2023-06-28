@@ -11,19 +11,24 @@ const insertUser = async (data) => {
     const request = new sql.Request(con);
 
     // Asignar los valores a los parámetros de la consulta
-    request.input("valorNickName", sql.VarChar, data.nickName);
-    request.input("valorCorreo", sql.VarChar, data.correo);
-    request.input("valorClave", sql.VarChar, data.clave);
-    request.input("valorNivel", sql.Int, data.nivel);
+    request.input("valorNickName", sql.VarChar, data.NickName);
+    request.input("valorCorreo", sql.VarChar, data.Correo);
+    request.input("valorClave", sql.VarChar, data.Clave);
+    request.input("valorNivel", sql.Int, data.Nivel);
+
+    // // {"UsuarioID":0,"NickName":"Oda",
+    // "Correo":"oda@udla.edu.ec","Clave":"oda1234567890",
+    // "Nivel":1,"Imagen":null,"Calificacions":null,
+    // "Comentarios":null,"Favoritos":null,"RecetasTerminadas":null}
 
     // Ejecutar la consulta SQL de inserción
     const result = await request.query(query);
 
     console.log("Nuevo registro insertado:", result);
-    return result;
+    return {status: true, content: result};
   } catch (error) {
     console.error("Error al insertar el registro:", error);
-    return false;
+    return {status: false, content: error};
   } finally {
     // Cerrar la conexión a la base de datos
     await con.close();
@@ -31,7 +36,7 @@ const insertUser = async (data) => {
 };
 
 const deleteUser = async (data) => {
-  const { correo, clave } = data;
+  const { Correo, Clave } = data;
   let con;
   try {
     con = await getConnection();
@@ -42,17 +47,17 @@ const deleteUser = async (data) => {
     const request = new sql.Request(con);
 
     // Asignar los valores a los parámetros de la consulta
-    request.input("correo", sql.VarChar, correo);
-    request.input("clave", sql.VarChar, clave);
+    request.input("correo", sql.VarChar, Correo);
+    request.input("clave", sql.VarChar, Clave);
 
     // Ejecutar la consulta SQL de eliminación
     const result = await request.query(query);
 
     console.log("Registro eliminado:", result);
-    return result;
+    return {status: true, content: result};
   } catch (error) {
     console.error("Error al eliminar el registro:", error);
-    return false;
+    return {status: false, content: error};
   } finally {
     // Cerrar la conexión a la base de datos
     await con.close();
@@ -61,13 +66,13 @@ const deleteUser = async (data) => {
 
 const updateUser = async (data) => {
   const {
-    correoAnterior,
-    claveAnterior,
-    nickName,
-    correo,
-    clave,
-    nivel,
-    imagen,
+    CorreoAnterior,
+    ClaveAnterior,
+    NickName,
+    Correo,
+    Clave,
+    Nivel,
+    Imagen,
   } = data;
   let con;
   try {
@@ -81,22 +86,22 @@ const updateUser = async (data) => {
     const request = new sql.Request();
 
     // Asignar los valores a los parámetros de la consulta
-    request.input("nickName", sql.VarChar, nickName);
-    request.input("correo", sql.VarChar, correo);
-    request.input("clave", sql.VarChar, clave);
-    request.input("nivel", sql.Int, nivel);
-    request.input("imagen", sql.VarChar, imagen);
-    request.input("correoAnterior", sql.VarChar, correoAnterior);
-    request.input("claveAnterior", sql.VarChar, claveAnterior);
+    request.input("nickName", sql.VarChar, NickName);
+    request.input("correo", sql.VarChar, Correo);
+    request.input("clave", sql.VarChar, Clave);
+    request.input("nivel", sql.Int, Nivel);
+    request.input("imagen", sql.VarChar, Imagen);
+    request.input("correoAnterior", sql.VarChar, CorreoAnterior);
+    request.input("claveAnterior", sql.VarChar, ClaveAnterior);
 
     // Ejecutar la consulta SQL de actualización
     const result = await request.query(query);
 
     console.log("Registro actualizado:", result);
-    return result;
+    return {status: true, content: result};
   } catch (error) {
     console.error("Error al actualizar el registro:", error);
-    return false;
+    return {status: false, content: error};
   } finally {
     // Cerrar la conexión a la base de datos
     await con.close();
@@ -104,7 +109,7 @@ const updateUser = async (data) => {
 };
 
 const getUser = async (data) => {
-  const { correo, clave } = data;
+  const { Correo, Clave } = data;
   let con;
   try {
     con = await getConnection();
@@ -116,26 +121,58 @@ const getUser = async (data) => {
     const request = new sql.Request(con);
 
     // Asignar los valores a los parámetros de la consulta
-    request.input("correo", sql.VarChar, correo);
-    request.input("clave", sql.VarChar, clave);
+    request.input("correo", sql.VarChar, Correo);
+    request.input("clave", sql.VarChar, Clave);
 
     // Ejecutar la consulta SQL de obtención del usuario
     const result = await request.query(query);
     console.log("result getUser: ", result);
     if (result.recordset.length > 0) {
       console.log("Usuario encontrado:", result.recordset[0]);
-      return result.recordset[0];
+      return {status: true, content: result.recordset[0]};
     } else {
       console.log("Usuario no encontrado");
-      return false;
+      return {status: false, content: "Usuario no encontrado"};
     }
   } catch (error) {
     console.error("Error al obtener el usuario:", error);
-    return false;
+    return {status: false, content: error};
   } finally {
     // Cerrar la conexión a la base de datos
     await con.close();
   }
 };
 
-module.exports = { insertUser, deleteUser, updateUser, getUser };
+const getUserById = async (id) => {
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL para obtener el usuario
+    const query =
+      "SELECT * FROM Usuarios WHERE UsuarioID = @usuarioid";
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar los valores a los parámetros de la consulta
+    request.input("usuarioid", sql.Int, id);
+
+    // Ejecutar la consulta SQL de obtención del usuario
+    const result = await request.query(query);
+
+    if (result.recordset.length > 0) {
+      console.log("Usuario encontrado:", result.recordset[0]);
+      return {status: true, content: result.recordset[0]};
+    } else {
+      console.log("Usuario no encontrado");
+      return {status: false, content: "Usuario no encontrado"};
+    }
+  } catch (error) {
+    console.error("Error al obtener el usuario:", error);
+    return {status: false, content: error};
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+module.exports = { insertUser, deleteUser, updateUser, getUser, getUserById};
