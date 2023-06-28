@@ -2,11 +2,12 @@ const { getConnection, sql } = require("../database/dbConnection.js");
 
 const addRecipe = async (data) => {
   const { Nombre, Duracion, UrlImagen } = data;
+  let CalificacionPromedio = 1;
   let con;
   try {
     con = await getConnection();
     // Definir la consulta SQL de inserción
-    const query = `INSERT INTO Recetas (Nombre, Duracion, UrlImagen) VALUES (@nombre, @duracion, @urlImagen)`;
+    const query = `INSERT INTO Recetas (Nombre, Duracion, UrlImagen, CalificacionPromedio) VALUES (@nombre, @duracion, @urlImagen, @calificacionPromedio)`;
 
     // Crear un objeto de solicitud de la consulta
     const request = new sql.Request(con);
@@ -15,7 +16,8 @@ const addRecipe = async (data) => {
     request.input("nombre", sql.VarChar, Nombre);
     request.input("duracion", sql.Real, Duracion);
     request.input("urlImagen", sql.VarChar, UrlImagen);
-
+    request.input("calificacionPromedio", sql.Real, CalificacionPromedio);
+    
     // Ejecutar la consulta SQL de inserción
     const result = await request.query(query);
 
