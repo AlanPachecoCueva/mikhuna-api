@@ -13,7 +13,7 @@ const addRecipe = async (data) => {
 
     // Asignar los valores a los parámetros de la consulta
     request.input("nombre", sql.VarChar, Nombre);
-    request.input("duracion", sql.VarChar, Duracion);
+    request.input("duracion", sql.Real, Duracion);
     request.input("urlImagen", sql.VarChar, UrlImagen);
 
     // Ejecutar la consulta SQL de inserción
@@ -44,7 +44,7 @@ const addIngredient = async (data) => {
     // Asignar los valores a los parámetros de la consulta
     request.input("nombre", sql.VarChar, Nombre);
     request.input("unidad", sql.VarChar, Unidad);
-    request.input("recetaID", sql.VarChar, RecetaID);
+    request.input("recetaID", sql.Int, RecetaID);
 
     // Ejecutar la consulta SQL de inserción
     const result = await request.query(query);
@@ -73,7 +73,7 @@ const addStep = async (data) => {
   
       // Asignar los valores a los parámetros de la consulta
       request.input("Paso", sql.VarChar, Paso);
-      request.input("recetaID", sql.VarChar, RecetaID);
+      request.input("recetaID", sql.Int, RecetaID);
   
       // Ejecutar la consulta SQL de inserción
       const result = await request.query(query);
