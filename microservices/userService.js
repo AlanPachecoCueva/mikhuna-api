@@ -25,7 +25,7 @@ const insertUser = async (data) => {
     const result = await request.query(query);
 
     console.log("Nuevo registro insertado:", result);
-    return {status: true, content: result};
+    return {status: true, content: data};
   } catch (error) {
     console.error("Error al insertar el registro:", error);
     return {status: false, content: error};

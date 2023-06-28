@@ -48,13 +48,13 @@ const registerUser = async (data) => {
 const login = async (data) => {
   try {
     //Validar si el correo cumple con las reglas
-    const correoVal = validateEmail(data.correo);
+    const correoVal = validateEmail(data.Correo);
     if (correoVal != true) {
       return correoVal;
     }
 
     //Validar si el clave cumple con las reglas
-    const claveVal = validatePassword(data.clave);
+    const claveVal = validatePassword(data.Clave);
     if (claveVal != true) {
       return claveVal;
     }
