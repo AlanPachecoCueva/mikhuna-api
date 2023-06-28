@@ -1,3 +1,5 @@
+const express = require("express");
+const router = express.Router();
 const { getAllByTable } = require("../database/generalMethods");
 
 // Ruta para obtener todos los usuarios
