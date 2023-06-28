@@ -4,7 +4,7 @@ const router = express.Router();
 const { registerUser, login } = require("../microservices/authService");
 
 //Ruta para obtener todos los usuarios
-router.get("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   const data = req.body;
   const response = await login(data);
   if (!response.status) {
