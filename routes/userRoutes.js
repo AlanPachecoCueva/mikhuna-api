@@ -17,7 +17,7 @@ router.get("", async (req, res) => {
       .status(500)
       .json({ error: "Error al ejecutar la consulta get ", response: response.content });
   } else {
-    res.send(response.content.recordset);
+    res.status(200).json(response.content.recordset);
   }
 });
 
@@ -29,7 +29,7 @@ router.get("/:id", async (req, res) => {
   if (!response.status) {
     res.status(404).json({ response: response.content });
   } else {
-    res.send(response);
+    res.status(200).json(response);
   }
 });
 

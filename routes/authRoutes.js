@@ -12,7 +12,7 @@ router.get("/login", async (req, res) => {
       .status(500)
       .json({ error: "Error al ejecutar la consulta get: ", response: response.content });
   } else {
-    res.send(response);
+    res.status(200).json(response);
   }
 });
 
