@@ -68,7 +68,7 @@ const addStep = async (data) => {
     try {
       con = await getConnection();
       // Definir la consulta SQL de inserción
-      const query = `INSERT INTO Ingredientes (Paso, RecetaID) VALUES (@paso, @recetaID)`;
+      const query = `INSERT INTO Pasos (Paso, RecetaID) VALUES (@paso, @recetaID)`;
   
       // Crear un objeto de solicitud de la consulta
       const request = new sql.Request(con);
