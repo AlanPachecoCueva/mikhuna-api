@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 // Rutas
 const userRoutes = require("./routes/userRoutes.js");
 const authRoutes = require("./routes/authRoutes.js");
-
+const recipesRoutes = require("./routes/recipesRoutes.js");
 // Aplicación que corre express
 const app = express();
 
@@ -16,6 +16,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Le decimos a la app que use las rutas
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/recipes", recipesRoutes);
+
 
 
 // Puerto en el que se ejecutará el servidor

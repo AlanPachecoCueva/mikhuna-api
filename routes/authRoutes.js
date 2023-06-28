@@ -8,9 +8,7 @@ router.post("/login", async (req, res) => {
   const data = req.body;
   const response = await login(data);
   if (!response.status) {
-    res
-      .status(500)
-      .json({ error: "Error al ejecutar la consulta get: ", response: response.content });
+    res.status(500).json({ error: "Error al ejecutar la consulta get: ", response: response.content });
   } else {
     res.status(200).json(response);
   }
