@@ -6,6 +6,7 @@ const {
   deleteUser,
   updateUser,
   getUserById,
+  makeComment,
 } = require("../microservices/userService.js");
 
 // Ruta para obtener todos los usuarios
@@ -80,6 +81,21 @@ router.put("/update", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error updating user", response: error });
+  }
+});
+
+router.post("/makeComment", async (req, res) => {
+  const data = req.body; // Acceder correctamente al cuerpo de la solicitud
+
+  const response = await makeComment(data);
+  res.setHeader("Content-Type", "application/json");
+  // Lógica para crear un nuevo usuario
+  if (!response.status) {
+    res
+      .status(500)
+      .json({ error: "Error al ejecutar la consulta post", response: response.content });
+  } else {
+    res.status(200).json({ data });
   }
 });
 

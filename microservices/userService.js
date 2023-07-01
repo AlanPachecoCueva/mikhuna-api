@@ -175,4 +175,36 @@ const getUserById = async (id) => {
     await con.close();
   }
 };
-module.exports = { insertUser, deleteUser, updateUser, getUser, getUserById};
+
+const makeComment = async (data) => {
+  const { Contenido, RecetaID, UsuarioID } = data;
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL de inserción
+    const query = `INSERT INTO Comentarios (Contenido, RecetaID, UsuarioID) VALUES (@contenido, @recetaID, @usuarioID)`;
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar los valores a los parámetros de la consulta
+    request.input("contenido", sql.VarChar, Contenido);
+    request.input("recetaID", sql.Int, RecetaID);
+    request.input("usuarioID", sql.Int, UsuarioID);
+
+    // Ejecutar la consulta SQL de inserción
+    const result = await request.query(query);
+
+    console.log("Nuevo comentario insertado:", result);
+    return { status: true, content: data };
+  } catch (error) {
+    console.error("Error al insertar el comentario:", error);
+    return { status: false, content: error };
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+
+
+module.exports = { insertUser, deleteUser, updateUser, getUser, getUserById, makeComment };
