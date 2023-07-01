@@ -91,6 +91,116 @@ const addStep = async (data) => {
   }
 };
 
+const getIngredientsByRecetaID = async (recetaID) => {
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL de selección
+    const query = `SELECT * FROM Ingredientes WHERE RecetaID = @recetaID`;
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar el valor al parámetro de la consulta
+    request.input("recetaID", sql.Int, recetaID);
+
+    // Ejecutar la consulta SQL de selección
+    const result = await request.query(query);
+
+    // Verificar si se encontraron ingredientes con el RecetaID proporcionado
+    if (result.recordset.length > 0) {
+      const ingredientes = result.recordset;
+      console.log("Ingredientes encontrados:", ingredientes);
+      return { status: true, content: ingredientes };
+    } else {
+      console.log(
+        "No se encontraron ingredientes con el RecetaID proporcionado"
+      );
+      return { status: false, content: "No se encontraron ingredientes con el RecetaID proporcionado" };
+    }
+  } catch (error) {
+    console.error("Error al obtener los ingredientes:", error);
+    return { status: false, content: error };
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+
+const getStepsByRecetaID = async (recetaID) => {
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL de selección
+    const query = `SELECT * FROM Pasos WHERE RecetaID = @recetaID`;
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar el valor al parámetro de la consulta
+    request.input("recetaID", sql.Int, recetaID);
+
+    // Ejecutar la consulta SQL de selección
+    const result = await request.query(query);
+
+    // Verificar si se encontraron pasos con el RecetaID proporcionado
+    if (result.recordset.length > 0) {
+      const pasos = result.recordset;
+      console.log("Pasos encontrados:", pasos);
+      return { status: true, content: pasos };
+    } else {
+      console.log(
+        "No se encontraron pasos con el RecetaID proporcionado"
+      );
+      return { status: false, content: "No se encontraron pasos con el RecetaID proporcionado" };
+    }
+  } catch (error) {
+    console.error("Error al obtener los pasos:", error);
+    return { status: false, content: error };
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+
+
+const getCommentsByRecetaID = async (recetaID) => {
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL de selección
+    const query = `SELECT * FROM Comentarios WHERE RecetaID = @recetaID`;
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar el valor al parámetro de la consulta
+    request.input("recetaID", sql.Int, recetaID);
+
+    // Ejecutar la consulta SQL de selección
+    const result = await request.query(query);
+
+    // Verificar si se encontraron comentarios con el RecetaID proporcionado
+    if (result.recordset.length > 0) {
+      const comentarios = result.recordset;
+      console.log("Comentarios encontrados:", comentarios);
+      return { status: true, content: comentarios };
+    } else {
+      console.log(
+        "No se encontraron comentarios con el RecetaID proporcionado"
+      );
+      return { status: false, content: "No se encontraron comentarios con el RecetaID proporcionado"};
+    }
+  } catch (error) {
+    console.error("Error al obtener los comentarios:", error);
+    return { status: false, content: error };
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+
+
 const getRecipeById = async (recetaId) => {
   let con;
   try {
@@ -110,6 +220,43 @@ const getRecipeById = async (recetaId) => {
     if (result.recordset.length > 0) {
       const recipe = result.recordset[0];
       console.log("Receta encontrada:", recipe);
+
+      //En este punto ya hemos encontrado la receta, ahora debemos recuperar los
+      //Pasos, ingredientes y comentarios asociados a esa receta y ponerlos dentro de un atributo
+      //Dentro del objeto que se va a retornar
+
+      //Recuperamos los ingredientes
+      let ingredientes = await getIngredientsByRecetaID(recetaId);
+
+      if(!ingredientes.status){
+        ingredientes = [];
+      }else{
+        ingredientes = ingredientes.content;
+      }
+
+      //Recuperamos los pasos
+      let pasos = await getStepsByRecetaID(recetaId);
+      
+      if(!pasos.status){
+        pasos = [];
+      }else{
+        pasos = pasos.content;
+      }
+
+      //Recuperamos los comentarios
+      let comentarios = await getCommentsByRecetaID(recetaId);
+
+      if(!comentarios.status){
+        comentarios = [];
+      }else{
+        comentarios = comentarios.content;
+      }
+
+      recipe["Comentarios"] = comentarios;
+      recipe["Pasos"] = pasos;
+      recipe["Ingredientes"] = ingredientes;
+      console.log("recipe a enviar: ", recipe);
+
       return { status: true, content: recipe };
     } else {
       console.log(
