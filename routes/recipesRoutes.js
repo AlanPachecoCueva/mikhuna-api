@@ -72,12 +72,14 @@ router.get("/:id", async (req, res) => {
   const response = await getRecipeById(id);
 
   if (!response.status) {
+    res.setHeader("Content-Type", "application/json");
+
     res.status(500).json({
       error: "Error al ejecutar la consulta get de receta por id",
       response: response.content,
     });
   } else {
-    res.status(200).json(response.content.recordset);
+    res.status(200).json(response.content);
   }
 });
 

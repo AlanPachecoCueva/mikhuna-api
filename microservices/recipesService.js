@@ -106,7 +106,6 @@ const getRecipeById = async (recetaId) => {
 
     // Ejecutar la consulta SQL de selección
     const result = await request.query(query);
-    console.log("result getRecipeById: ", result);
     // Verificar si se encontró una receta con el RecetaID proporcionado
     if (result.recordset.length > 0) {
       const recipe = result.recordset[0];
