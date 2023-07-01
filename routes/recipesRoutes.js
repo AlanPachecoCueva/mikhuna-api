@@ -10,7 +10,7 @@ const {
 
 router.get("", async (req, res) => {
   const response = await getAllByTable("Recetas");
-
+  res.setHeader("Content-Type", "application/json");
   if (!response.status) {
     res.status(500).json({
       error: "Error al ejecutar la consulta get ",
@@ -26,6 +26,7 @@ router.post("", async (req, res) => {
   const data = req.body; // Acceder correctamente al cuerpo de la solicitud
 
   const response = await addRecipe(data);
+  res.setHeader("Content-Type", "application/json");
   // Lógica para crear un nuevo usuario
   if (!response.status) {
     res.status(500).json({
@@ -41,6 +42,7 @@ router.post("/ingredients", async (req, res) => {
   const data = req.body; // Acceder correctamente al cuerpo de la solicitud
 
   const response = await addIngredient(data);
+  res.setHeader("Content-Type", "application/json");
   // Lógica para crear un nuevo usuario
   if (!response.status) {
     res.status(500).json({
@@ -56,6 +58,7 @@ router.post("/steps", async (req, res) => {
   const data = req.body; // Acceder correctamente al cuerpo de la solicitud
 
   const response = await addStep(data);
+  res.setHeader("Content-Type", "application/json");
   // Lógica para crear un nuevo usuario
   if (!response.status) {
     res.status(500).json({
@@ -70,9 +73,8 @@ router.post("/steps", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const response = await getRecipeById(id);
-
+  res.setHeader("Content-Type", "application/json");
   if (!response.status) {
-    res.setHeader("Content-Type", "application/json");
 
     res.status(500).json({
       error: "Error al ejecutar la consulta get de receta por id",

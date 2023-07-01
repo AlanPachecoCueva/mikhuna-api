@@ -7,6 +7,7 @@ const { registerUser, login } = require("../microservices/authService");
 router.post("/login", async (req, res) => {
   const data = req.body;
   const response = await login(data);
+  res.setHeader("Content-Type", "application/json");
   if (!response.status) {
     res.status(500).json({ error: "Error al ejecutar la consulta get: ", response: response.content });
   } else {
@@ -20,6 +21,7 @@ router.post("/register", async (req, res) => {
 
   const response = await registerUser(data);
   console.log("response register: ", response);
+  res.setHeader("Content-Type", "application/json");
   // Lógica para crear un nuevo usuario
   if (!response.status) {
     res.status(500).json({ error: "Error al hacer register ", response: response.content });

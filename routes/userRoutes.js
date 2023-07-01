@@ -11,7 +11,7 @@ const {
 // Ruta para obtener todos los usuarios
 router.get("", async (req, res) => {
   const response = await getAllByTable("Usuarios");
-
+  res.setHeader("Content-Type", "application/json");
   if (!response.status) {
     res
       .status(500)
@@ -25,6 +25,7 @@ router.get("/:id", async (req, res) => {
   const userId = req.params.id;
 
   const response = await getUserById(userId);
+  res.setHeader("Content-Type", "application/json");
   console.log("resposne getById: ", response);
   if (!response.status) {
     res.status(404).json({ response: response.content });
@@ -38,6 +39,7 @@ router.post("", async (req, res) => {
   const userData = req.body; // Acceder correctamente al cuerpo de la solicitud
 
   const response = await insertUser(userData);
+  res.setHeader("Content-Type", "application/json");
   // Lógica para crear un nuevo usuario
   if (!response.status) {
     res
@@ -50,6 +52,7 @@ router.post("", async (req, res) => {
 
 router.delete("/delete", async (req, res) => {
   const data = req.body;
+  res.setHeader("Content-Type", "application/json");
   try {
     const resp = await deleteUser(data);
     if (!resp.status) {
@@ -65,6 +68,7 @@ router.delete("/delete", async (req, res) => {
 
 router.put("/update", async (req, res) => {
   const data = req.body;
+  res.setHeader("Content-Type", "application/json");
   try {
     const result = await updateUser(data);
 
