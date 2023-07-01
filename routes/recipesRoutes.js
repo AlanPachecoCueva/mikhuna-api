@@ -5,9 +5,9 @@ const {
   addRecipe,
   addIngredient,
   addStep,
+  getRecipeById
 } = require("../microservices/recipesService.js");
 
-// Ruta para obtener todos los usuarios
 router.get("", async (req, res) => {
   const response = await getAllByTable("Recetas");
 
@@ -53,19 +53,33 @@ router.post("/ingredients", async (req, res) => {
 });
 
 router.post("/steps", async (req, res) => {
-    const data = req.body; // Acceder correctamente al cuerpo de la solicitud
-  
-    const response = await addStep(data);
-    // Lógica para crear un nuevo usuario
-    if (!response.status) {
-      res.status(500).json({
-        error: "Error al ejecutar la consulta post",
-        response: response.content,
-      });
-    } else {
-      res.status(200).json({ data });
-    }
-  });
+  const data = req.body; // Acceder correctamente al cuerpo de la solicitud
+
+  const response = await addStep(data);
+  // Lógica para crear un nuevo usuario
+  if (!response.status) {
+    res.status(500).json({
+      error: "Error al ejecutar la consulta post",
+      response: response.content,
+    });
+  } else {
+    res.status(200).json({ data });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const response = await getRecipeById(id);
+
+  if (!response.status) {
+    res.status(500).json({
+      error: "Error al ejecutar la consulta get de receta por id",
+      response: response.content,
+    });
+  } else {
+    res.status(200).json(response.content.recordset);
+  }
+});
 
 // Exporta el objeto router
 module.exports = router;
