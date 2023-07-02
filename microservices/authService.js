@@ -5,6 +5,7 @@ const {
   validateNumber,
 } = require("../microservices/validationsService");
 const { insertUser, getUser } = require("../microservices/userService");
+const { getConnection, sql } = require("../database/dbConnection.js");
 
 const registerUser = async (data) => {
   try {
@@ -67,4 +68,35 @@ const login = async (data) => {
   }
 };
 
-module.exports = { registerUser, login };
+const editUser = async (UsuarioID, data) => {
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL de actualización
+    const query = `UPDATE Usuarios SET NickName = @valorNickName, Correo = @valorCorreo, Clave = @valorClave, Imagen = @valorImagen WHERE UsuarioID = @usuarioID`;
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar los valores a los parámetros de la consulta
+    request.input("valorNickName", sql.VarChar, data.NickName);
+    request.input("valorCorreo", sql.VarChar, data.Correo);
+    request.input("valorClave", sql.VarChar, data.Clave);
+    request.input("valorImagen", sql.VarChar, data.Imagen);
+    request.input("usuarioID", sql.Int, UsuarioID);
+
+    // Ejecutar la consulta SQL de actualización
+    const result = await request.query(query);
+
+    console.log("Registro actualizado:", result);
+    return { status: true, content: data };
+  } catch (error) {
+    console.error("Error al actualizar el registro:", error);
+    return { status: false, content: error };
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+
+module.exports = { registerUser, login, editUser };

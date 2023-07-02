@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { registerUser, login } = require("../microservices/authService");
+const { registerUser, login, editUser } = require("../microservices/authService");
 
 //Ruta para obtener todos los usuarios
 router.post("/login", async (req, res) => {
@@ -21,6 +21,21 @@ router.post("/register", async (req, res) => {
 
   const response = await registerUser(data);
   console.log("response register: ", response);
+  res.setHeader("Content-Type", "application/json");
+  // Lógica para crear un nuevo usuario
+  if (!response.status) {
+    res.status(500).json({ error: "Error al hacer register ", response: response.content });
+  } else {
+    res.status(200).json({ data });
+  }
+});
+
+router.put("/edit/:id", async (req, res) => {
+  const userId = req.params.id;
+  const data = req.body; // Acceder correctamente al cuerpo de la solicitud
+
+  const response = await editUser(userId, data);
+  console.log("response edit user: ", response);
   res.setHeader("Content-Type", "application/json");
   // Lógica para crear un nuevo usuario
   if (!response.status) {
