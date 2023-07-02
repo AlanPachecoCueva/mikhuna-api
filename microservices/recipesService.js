@@ -116,7 +116,10 @@ const getIngredientsByRecetaID = async (recetaID) => {
       console.log(
         "No se encontraron ingredientes con el RecetaID proporcionado"
       );
-      return { status: false, content: "No se encontraron ingredientes con el RecetaID proporcionado" };
+      return {
+        status: false,
+        content: "No se encontraron ingredientes con el RecetaID proporcionado",
+      };
     }
   } catch (error) {
     console.error("Error al obtener los ingredientes:", error);
@@ -149,10 +152,11 @@ const getStepsByRecetaID = async (recetaID) => {
       console.log("Pasos encontrados:", pasos);
       return { status: true, content: pasos };
     } else {
-      console.log(
-        "No se encontraron pasos con el RecetaID proporcionado"
-      );
-      return { status: false, content: "No se encontraron pasos con el RecetaID proporcionado" };
+      console.log("No se encontraron pasos con el RecetaID proporcionado");
+      return {
+        status: false,
+        content: "No se encontraron pasos con el RecetaID proporcionado",
+      };
     }
   } catch (error) {
     console.error("Error al obtener los pasos:", error);
@@ -162,7 +166,6 @@ const getStepsByRecetaID = async (recetaID) => {
     await con.close();
   }
 };
-
 
 const getCommentsByRecetaID = async (recetaID) => {
   let con;
@@ -189,7 +192,10 @@ const getCommentsByRecetaID = async (recetaID) => {
       console.log(
         "No se encontraron comentarios con el RecetaID proporcionado"
       );
-      return { status: false, content: "No se encontraron comentarios con el RecetaID proporcionado"};
+      return {
+        status: false,
+        content: "No se encontraron comentarios con el RecetaID proporcionado",
+      };
     }
   } catch (error) {
     console.error("Error al obtener los comentarios:", error);
@@ -199,7 +205,6 @@ const getCommentsByRecetaID = async (recetaID) => {
     await con.close();
   }
 };
-
 
 const getRecipeById = async (recetaId) => {
   let con;
@@ -228,27 +233,27 @@ const getRecipeById = async (recetaId) => {
       //Recuperamos los ingredientes
       let ingredientes = await getIngredientsByRecetaID(recetaId);
 
-      if(!ingredientes.status){
+      if (!ingredientes.status) {
         ingredientes = [];
-      }else{
+      } else {
         ingredientes = ingredientes.content;
       }
 
       //Recuperamos los pasos
       let pasos = await getStepsByRecetaID(recetaId);
-      
-      if(!pasos.status){
+
+      if (!pasos.status) {
         pasos = [];
-      }else{
+      } else {
         pasos = pasos.content;
       }
 
       //Recuperamos los comentarios
       let comentarios = await getCommentsByRecetaID(recetaId);
 
-      if(!comentarios.status){
+      if (!comentarios.status) {
         comentarios = [];
-      }else{
+      } else {
         comentarios = comentarios.content;
       }
 
@@ -273,4 +278,154 @@ const getRecipeById = async (recetaId) => {
   }
 };
 
-module.exports = { addRecipe, addIngredient, addStep, getRecipeById };
+const deleteCalificacionsByRecetaID = async (RecetaID) => {
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL de eliminación
+    const query = `DELETE FROM Calificacions WHERE RecetaID = @recetaID`;
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar el valor al parámetro de la consulta
+    request.input("recetaID", sql.Int, RecetaID);
+
+    // Ejecutar la consulta SQL de eliminación
+    const result = await request.query(query);
+
+    console.log("Registros eliminados:", result.rowsAffected);
+    return {
+      status: true,
+      content: `Se han eliminado ${result.rowsAffected} calificaciones`,
+    };
+  } catch (error) {
+    console.error("Error al eliminar los registros:", error);
+    return { status: false, content: error };
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+
+const deleteCommentsByRecetaID = async (RecetaID) => {
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL de eliminación
+    const query = `DELETE FROM Comentarios WHERE RecetaID = @recetaID`;
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar el valor al parámetro de la consulta
+    request.input("recetaID", sql.Int, RecetaID);
+
+    // Ejecutar la consulta SQL de eliminación
+    const result = await request.query(query);
+
+    console.log("Registros eliminados:", result.rowsAffected);
+    return {
+      status: true,
+      content: `Se han eliminado ${result.rowsAffected} comentarios`,
+    };
+  } catch (error) {
+    console.error("Error al eliminar los registros:", error);
+    return { status: false, content: error };
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+
+
+const deleteIngredientsByRecetaID = async (RecetaID) => {
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL de eliminación
+    const query = `DELETE FROM Ingredientes WHERE RecetaID = @recetaID`;
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar el valor al parámetro de la consulta
+    request.input("recetaID", sql.Int, RecetaID);
+
+    // Ejecutar la consulta SQL de eliminación
+    const result = await request.query(query);
+
+    console.log("Registros eliminados:", result.rowsAffected);
+    return {
+      status: true,
+      content: `Se han eliminado ${result.rowsAffected} comentarios`,
+    };
+  } catch (error) {
+    console.error("Error al eliminar los registros:", error);
+    return { status: false, content: error };
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+
+const deleteStepsByRecetaID = async (RecetaID) => {
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL de eliminación
+    const query = `DELETE FROM Pasos WHERE RecetaID = @recetaID`;
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar el valor al parámetro de la consulta
+    request.input("recetaID", sql.Int, RecetaID);
+
+    // Ejecutar la consulta SQL de eliminación
+    const result = await request.query(query);
+
+    console.log("Registros eliminados:", result.rowsAffected);
+    return {
+      status: true,
+      content: `Se han eliminado ${result.rowsAffected} comentarios`,
+    };
+  } catch (error) {
+    console.error("Error al eliminar los registros:", error);
+    return { status: false, content: error };
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+
+const deleteRecipeByID = async (RecetaID) => {
+  let con;
+  try {
+    con = await getConnection();
+    // Definir la consulta SQL de eliminación
+    const query = `DELETE FROM Pasos WHERE RecetaID = @recetaID`;
+
+    // Crear un objeto de solicitud de la consulta
+    const request = new sql.Request(con);
+
+    // Asignar el valor al parámetro de la consulta
+    request.input("recetaID", sql.Int, RecetaID);
+
+    // Ejecutar la consulta SQL de eliminación
+    const result = await request.query(query);
+
+    console.log("Registros eliminados:", result.rowsAffected);
+    return {
+      status: true,
+      content: `Se han eliminado ${result.rowsAffected} comentarios`,
+    };
+  } catch (error) {
+    console.error("Error al eliminar los registros:", error);
+    return { status: false, content: error };
+  } finally {
+    // Cerrar la conexión a la base de datos
+    await con.close();
+  }
+};
+module.exports = { addRecipe, addIngredient, addStep, getRecipeById, deleteCalificacionsByRecetaID, deleteCommentsByRecetaID, deleteIngredientsByRecetaID, deleteStepsByRecetaID, deleteRecipeByID };

@@ -5,7 +5,11 @@ const {
   addRecipe,
   addIngredient,
   addStep,
-  getRecipeById
+  getRecipeById,
+  deleteCalificacionsByRecetaID,
+  deleteCommentsByRecetaID,
+  deleteIngredientsByRecetaID,
+  deleteRecipeByID
 } = require("../microservices/recipesService.js");
 
 router.get("", async (req, res) => {
@@ -85,5 +89,79 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.delete("/deleteCalificacion/:id", async (req, res) => {
+  const { id } = req.params;
+  const response = await deleteCalificacionsByRecetaID(id);
+  res.setHeader("Content-Type", "application/json");
+  if (!response.status) {
+
+    res.status(500).json({
+      error: "Error al ejecutar la consulta get de receta por id",
+      response: response.content,
+    });
+  } else {
+    res.status(200).json(response.content);
+  }
+});
+
+router.delete("/deleteComment/:id", async (req, res) => {
+  const { id } = req.params;
+  const response = await deleteCommentsByRecetaID(id);
+  res.setHeader("Content-Type", "application/json");
+  if (!response.status) {
+
+    res.status(500).json({
+      error: "Error al ejecutar la consulta get de receta por id",
+      response: response.content,
+    });
+  } else {
+    res.status(200).json(response.content);
+  }
+});
+
+router.delete("/ingredients/deleteIngredient/:id", async (req, res) => {
+  const { id } = req.params;
+  const response = await deleteIngredientsByRecetaID(id);
+  res.setHeader("Content-Type", "application/json");
+  if (!response.status) {
+
+    res.status(500).json({
+      error: "Error al ejecutar la consulta get de receta por id",
+      response: response.content,
+    });
+  } else {
+    res.status(200).json(response.content);
+  }
+});
+
+router.delete("/steps/deleteStep/:id", async (req, res) => {
+  const { id } = req.params;
+  const response = await deleteStepsByRecetaID(id);
+  res.setHeader("Content-Type", "application/json");
+  if (!response.status) {
+
+    res.status(500).json({
+      error: "Error al ejecutar la consulta get de receta por id",
+      response: response.content,
+    });
+  } else {
+    res.status(200).json(response.content);
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  const response = await deleteRecipeByID(id);
+  res.setHeader("Content-Type", "application/json");
+  if (!response.status) {
+
+    res.status(500).json({
+      error: "Error al ejecutar la consulta get de receta por id",
+      response: response.content,
+    });
+  } else {
+    res.status(200).json(response.content);
+  }
+});
 // Exporta el objeto router
 module.exports = router;
