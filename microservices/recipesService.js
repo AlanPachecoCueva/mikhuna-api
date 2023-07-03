@@ -404,7 +404,7 @@ const deleteRecipeByID = async (RecetaID) => {
   try {
     con = await getConnection();
     // Definir la consulta SQL de eliminación
-    const query = `DELETE FROM Pasos WHERE RecetaID = @recetaID`;
+    const query = `DELETE FROM Recetas WHERE RecetaID = @recetaID`;
 
     // Crear un objeto de solicitud de la consulta
     const request = new sql.Request(con);
@@ -414,7 +414,6 @@ const deleteRecipeByID = async (RecetaID) => {
 
     // Ejecutar la consulta SQL de eliminación
     const result = await request.query(query);
-    console.log("result de delete receta: ", result);
     console.log("Registros eliminados:", result.rowsAffected);
     return {
       status: true,
