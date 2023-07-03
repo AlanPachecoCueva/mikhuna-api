@@ -25,6 +25,45 @@ router.get("", async (req, res) => {
   }
 });
 
+router.get("/calificacions", async (req, res) => {
+  const response = await getAllByTable("Calificacions");
+  res.setHeader("Content-Type", "application/json");
+  if (!response.status) {
+    res.status(500).json({
+      error: "Error al ejecutar la consulta get ",
+      response: response.content,
+    });
+  } else {
+    res.status(200).json(response.content.recordset);
+  }
+});
+
+router.get("/comments", async (req, res) => {
+  const response = await getAllByTable("Comentarios");
+  res.setHeader("Content-Type", "application/json");
+  if (!response.status) {
+    res.status(500).json({
+      error: "Error al ejecutar la consulta get ",
+      response: response.content,
+    });
+  } else {
+    res.status(200).json(response.content.recordset);
+  }
+});
+
+router.get("/ingredients", async (req, res) => {
+  const response = await getAllByTable("Ingredientes");
+  res.setHeader("Content-Type", "application/json");
+  if (!response.status) {
+    res.status(500).json({
+      error: "Error al ejecutar la consulta get ",
+      response: response.content,
+    });
+  } else {
+    res.status(200).json(response.content.recordset);
+  }
+});
+
 // Ruta para crear un nuevo usuario
 router.post("", async (req, res) => {
   const data = req.body; // Acceder correctamente al cuerpo de la solicitud
