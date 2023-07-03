@@ -203,7 +203,9 @@ router.delete("/steps/deleteStep/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
+  console.log("Delete recipe by id: ", id);
   const response = await deleteRecipeByID(id);
+  
   res.setHeader("Content-Type", "application/json");
   if (!response.status) {
 

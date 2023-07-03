@@ -414,7 +414,7 @@ const deleteRecipeByID = async (RecetaID) => {
 
     // Ejecutar la consulta SQL de eliminación
     const result = await request.query(query);
-
+    console.log("result de delete receta: ", result);
     console.log("Registros eliminados:", result.rowsAffected);
     return {
       status: true,
